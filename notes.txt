@@ -30,13 +30,15 @@ PriceLevel (:name)
 
 	r g scaffold price_level name:string brand:references:index
 
+OrderType (:name)
+	belongs_to :brand
+
+	r g scaffold order_type name:string brand:references:index
+
 Price (:amount)
 	belongs_to :menu_item
 	belongs_to :price_level
 	validate menu_item.brand == price_level.brand
-
-OrderType (:name)
-	belongs_to :brand
 
 DayPart (:name)
 	belongs_to :location
@@ -49,3 +51,10 @@ LocationPriceLevel
 	validates day_part.location == location
 
 Menu (not database backed, optional?)
+
+
+
+TODO
+
+slug routes
+clean up admin (remove brand filter, remove id columns, etc)

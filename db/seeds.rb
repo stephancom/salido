@@ -33,6 +33,7 @@ def fake_item
 end
 
 optional_price_levels = ['Happy Hour', 'Early Bird', 'Late Night', "Holiday", "Rush"]
+order_types = ["Dine In", "Carry Out", "Delivery", "Counter Service", "Catering"]
 
 Brand.all.each do |brand|
 	if brand.locations.empty?
@@ -51,4 +52,9 @@ Brand.all.each do |brand|
 		end
 	end
 	brand.price_levels.where(name: 'Regular').first_or_create # always make Regular price
+	if brand.order_types.empty?
+		order_types.sample(rand(1..(order_types.length))).each do |order_type_name|
+			brand.order_types.where(name: order_type_name).first_or_create
+		end
+	end
 end

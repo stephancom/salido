@@ -39,4 +39,17 @@ ActiveAdmin.register Brand do
     end
     h4 link_to 'Add Price Level', new_admin_brand_price_level_path(brand)
   end
+
+  action_item :order_types, only: [:show, :edit] do
+    link_to 'Order Types', admin_brand_order_types_path(brand)
+  end
+
+  sidebar "Order Types", only: [:show, :edit] do
+    ul do
+      brand.order_types.each do |p|
+        li link_to p.name, admin_brand_order_type_path(brand, p)
+      end
+    end
+    h4 link_to 'Add Order Type', new_admin_brand_order_type_path(brand)
+  end
 end
