@@ -1,9 +1,11 @@
 h1= @location.full_name
 
-h3 Menu
-
-/ ul= render @location.brand.menu_items
-
+h3 
+	' Menu
+	.btn-group.float-xs-right data-toggle=:buttons
+		- @location.day_parts.each do |day_part|
+			label.btn.btn-outline-primary
+				input type=:radio name=:day_part id=day_part autocomplete=:off = day_part.name
 
 
 ul.nav.nav-tabs

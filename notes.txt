@@ -44,6 +44,7 @@ OrderType (:name)
 
 	r g scaffold order_type name:string brand:references:index
 
+CHECK
 * Each **Location** has multiple **Day Parts** (e.g. "Lunch" and "Dinner").
 DayPart (:name)
 	belongs_to :location
