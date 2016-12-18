@@ -1,55 +1,19 @@
 ActiveAdmin.register Brand do
 	permit_params :name
 
-	action_item :locations, only: [:show, :edit] do
-		link_to 'Locations', admin_brand_locations_path(brand)
-	end
-
-  sidebar "Locations", only: [:show, :edit] do
-    ul do
-      brand.locations.each do |l|
-				li link_to l.name, admin_brand_location_path(brand, l)
-      end
+  %i(locations menu_items price_levels order_types).each do |child_type|
+    title = child_type.to_s.titleize
+    action_item child_type, only: [:show, :edit] do
+      link_to title, polymorphic_path([:admin, brand, child_type])
     end
-		h4 link_to 'Add Location', new_admin_brand_location_path(brand)
-  end
 
-	action_item :menu_items, only: [:show, :edit] do
-		link_to 'Menu Items', admin_brand_menu_items_path(brand)
-	end
-
-  sidebar "Menu Items", only: [:show, :edit] do
-    ul do
-      brand.menu_items.each do |m|
-				li link_to m.name, admin_brand_menu_item_path(brand, m)
+    sidebar title, only: [:show, :edit] do
+      ul do
+        brand.send(child_type).each do |c|
+          li link_to c.name, polymorphic_path([:admin, brand, c])
+        end
       end
+      h4 link_to "Add #{title.singularize}", new_polymorphic_path([:admin, brand, child_type.to_s.singularize])
     end
-		h4 link_to 'Add Menu Item', new_admin_brand_menu_item_path(brand)
-  end
-
-  action_item :price_levels, only: [:show, :edit] do
-    link_to 'Price Levels', admin_brand_price_levels_path(brand)
-  end
-
-  sidebar "Price Levels", only: [:show, :edit] do
-    ul do
-      brand.price_levels.each do |p|
-        li link_to p.name, admin_brand_price_level_path(brand, p)
-      end
-    end
-    h4 link_to 'Add Price Level', new_admin_brand_price_level_path(brand)
-  end
-
-  action_item :order_types, only: [:show, :edit] do
-    link_to 'Order Types', admin_brand_order_types_path(brand)
-  end
-
-  sidebar "Order Types", only: [:show, :edit] do
-    ul do
-      brand.order_types.each do |p|
-        li link_to p.name, admin_brand_order_type_path(brand, p)
-      end
-    end
-    h4 link_to 'Add Order Type', new_admin_brand_order_type_path(brand)
   end
 end
