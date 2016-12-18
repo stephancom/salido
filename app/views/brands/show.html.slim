@@ -1,7 +1,13 @@
 h1= @brand.name
 
+h2 Locations
 ul= render @brand.locations
 
+h2 Menu Items
+ul= render @brand.menu_items
+
 = link_to 'Locations', brand_locations_path(@brand)
+'  |
+= link_to 'Menu Items', brand_menu_items_path(@brand)
 '  |
 = link_to 'Back', brands_path

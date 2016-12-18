@@ -17,10 +17,30 @@ end
 neighborhoods = ['SoHo', 'TriBeCa', 'Village', 'Chelsea', 'Bowery', 'NoHo', 'Turtle Bay',
 	'Bushwick', 'Dumbo', 'Red Hook', 'Williamsburg', 'Park Slope', 'Coney Island']
 
+def fake_item
+	item_prefix = %w(Mega Jumbo Fried Super Mini Kids Double Baked Macho Cajun Portuguese Sushi Farm BBQ Roasted Chocolate)
+	items = %w(Beef Angus Steak Wings Chicken Ostrich Fish Shrimp Tuna Brisket Pork Bacon Duck Lemon)
+	item_postfix = %w(Burger Omlette Sandwich Pizza Nachos Taco Torta Salad Sushi Platter Dog Waffle Pie)
+
+	item = items.sample
+	if [true,true,true,false].sample
+		item = "#{item_prefix.sample} #{item}"
+	end
+	if [true,true,true,true,false].sample
+		item = "#{item} #{item_postfix.sample}"
+	end
+	item
+end
+
 Brand.all.each do |brand|
 	if brand.locations.empty?
 		neighborhoods.sample(rand(3..(neighborhoods.length-3))).each do |neighborhood_name|
 			brand.locations.where(name: neighborhood_name).first_or_create
+		end
+	end
+	if brand.menu_items.empty?
+		rand(5..15).times do
+			brand.menu_items.where(name: fake_item).first_or_create
 		end
 	end
 end

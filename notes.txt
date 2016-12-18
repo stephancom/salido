@@ -4,9 +4,9 @@ Brand (:name)
 	has_many :price_levels
 	has_many :order_types
 
-	r g scaffold brand name:string
+	r g scaffold brand name:string:uniq
 
-Location (:name, :address)
+Location (:name)
 	belongs_to :brand
 	has_many :day_parts
 	has_many :price_levels, through: :day_parts
@@ -15,11 +15,15 @@ Location (:name, :address)
 		returns available menu items and prices
 		maybe hash?
 
-MenuItem (:name, :description)
+	r g scaffold location name:string brand:references:index
+
+MenuItem (:name)
 	belongs_to :brand
 	has_many :prices
 	def available_at(location, order_type, day_part)
 	def price_at(location, order_type, day_part)
+
+	r g scaffold menu_item name:string brand:references:index
 
 PriceLevel (:name)
 	belongs_to :brand
