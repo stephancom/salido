@@ -1,3 +1,5 @@
+
+CHECK
 Brand (:name)
 	has_many :locations
 	has_many :menu_items
@@ -6,6 +8,8 @@ Brand (:name)
 
 	r g scaffold brand name:string:uniq
 
+CHECK
+* Each restaurant **Brand** using the SALIDO platform has multiple **Locations**.
 Location (:name)
 	belongs_to :brand
 	has_many :day_parts
@@ -17,7 +21,8 @@ Location (:name)
 
 	r g scaffold location name:string brand:references:index
 
-MenuItem (:name)
+CHECK
+* Each **Brand** has various **Menu Items** that may be used by any of its **Locations** (e.g. Cafe Bangarang's FiDi and SoHo locations both sell a "Spicy Reuben").
 	belongs_to :brand
 	has_many :prices
 	def available_at(location, order_type, day_part)
@@ -25,24 +30,41 @@ MenuItem (:name)
 
 	r g scaffold menu_item name:string brand:references:index
 
+CHECK
+* Each **Brand** has various **Price Levels** (e.g. "Regular" or "Happy Hour") that may be used by any of its **Locations**.
 PriceLevel (:name)
 	belongs_to :brand
 
 	r g scaffold price_level name:string brand:references:index
 
+CHECK
+* Each **Brand** has various **Order Types** (e.g. "Dine In" or "Delivery") that may be used by any of its **Locations**.
 OrderType (:name)
 	belongs_to :brand
 
 	r g scaffold order_type name:string brand:references:index
 
+* Each **Location** has multiple **Day Parts** (e.g. "Lunch" and "Dinner").
+DayPart (:name)
+	belongs_to :location
+	belongs_to :brand, through: :location
+	def	menu_for_order_type(order_type)
+		returns ?arel or hash? of MenuItems with Price
+
+	r g scaffold day_part name:string location:references:index
+
+* Each **Menu Item** may have a price assigned for each available **Price Level** (e.g. Regular: $4, Happy Hour: $2).
+MenuItem (:name)
 Price (:amount)
 	belongs_to :menu_item
 	belongs_to :price_level
 	validate menu_item.brand == price_level.brand
 
-DayPart (:name)
-	belongs_to :location
-
+* **Price Levels** are configured per **Location**. This is done by specifying an **Order Type** and optional **Day Part** for which it should be applied.
+  * e.g. For the FiDi location:
+    * The "Regular" price level is applied if the order type is "Dine In"
+    * The "Happy Hour" price level is applied if the order type is "Dine In" and the day part is "Dinner"
+    * The "Delivery" price level is applied if the order type is "Delivery"
 LocationPriceLevel
 	belongs_to :price_level
 	belongs_to :order_type
@@ -50,8 +72,13 @@ LocationPriceLevel
 	validates price_level/order_type all same brand
 	validates day_part.location == location
 
+* The applicable **Price Level** for any given **Menu Item** is determined at the point of sale by assessing the **Price Level** configurations for the current **Location**:
+  * If the **Menu Item** has a price specified for the **Price Level** that correlates with the current **Order Type** and **Day Part**, use that **Price Level**.
+  * Else, if the **Menu Item** has a price specified for the **Price Level** that correlates with the current **Order Type**, use that **Price Level**.
+  * Otherwise, the **Menu Item** has no currently applicable **Price Level** and cannot be purchased.
 Menu (not database backed, optional?)
-
+	Menu depends on DayPart which depends on Location which depends on Brand
+	so all we need then is OrderType
 
 
 TODO
