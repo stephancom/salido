@@ -1,0 +1,43 @@
+Brand (:name)
+	has_many :locations
+	has_many :menu_items
+	has_many :price_levels
+	has_many :order_types
+
+Location (:name, :address)
+	belongs_to :brand
+	has_many :day_parts
+	has_many :price_levels, through: :day_parts
+
+	def menu_for(order_type, day_part)
+		returns available menu items and prices
+		maybe hash?
+
+MenuItem (:name, :description)
+	belongs_to :brand
+	has_many :prices
+	def available_at(location, order_type, day_part)
+	def price_at(location, order_type, day_part)
+
+PriceLevel (:name)
+	belongs_to :brand
+
+Price (:amount)
+	belongs_to :menu_item
+	belongs_to :price_level
+	validate menu_item.brand == price_level.brand
+
+OrderType (:name)
+	belongs_to :brand
+
+DayPart (:name)
+	belongs_to :location
+
+LocationPriceLevel
+	belongs_to :price_level
+	belongs_to :order_type
+	belongs_to :day_part (optional) (nested_attribute ignores dupes?)
+	validates price_level/order_type all same brand
+	validates day_part.location == location
+
+Menu (not database backed, optional?)

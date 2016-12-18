@@ -6,3 +6,10 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 # Environment variables (ENV['...']) can be set in the file .env file.
+
+brand_names = ['French Toast Hut', 'Denise\'s', 'NSOC', 'Sheboygan Tame Legs', # NSOC = National Shack of Crepes
+	'Emerald Thursday', 'Pickle Yard', 'Blue Oyster', 'Bosom\'s', 'Ruddfuckers', 'New City Trough']
+
+brand_names.each do |brand_name|
+	Brand.where(name: brand_name).first_or_create
+end
