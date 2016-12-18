@@ -57,4 +57,23 @@ Brand.all.each do |brand|
 			brand.order_types.where(name: order_type_name).first_or_create
 		end
 	end
+
+	# source: https://www.englishclub.com/ref/esl/Power_of_7/7_Meals_of_the_Day_2946.htm
+	# alternate: http://askmiddlearth.tumblr.com/post/41765286488/the-seven-daily-hobbit-meals
+	# notably ommitted: midnight snack, late night, 'midnight breakfast', 'tiffin', 'bar snacks'
+	# spec does not discuss mapping these to particular time ranges
+	# which of course could be done, allowing for automatic generation of "hours of operation"
+	# and automatically selecting the right prices based on the time of day.
+	day_parts = %w(breakfast brunch elevenses lunch tea supper dinner)
+	Location.all.each do |location|
+		if location.day_parts.empty?
+			day_parts.sample(rand(1..(order_types.length))).each do |day_part_name|
+				location.day_parts.where(name: day_part_name).first_or_create
+			end
+		end
+	end
 end
+
+
+
+
