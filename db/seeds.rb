@@ -13,3 +13,14 @@ brand_names = ['French Toast Hut', 'Denise\'s', 'NSOC', 'Sheboygan Tame Legs', #
 brand_names.each do |brand_name|
 	Brand.where(name: brand_name).first_or_create
 end
+
+neighborhoods = ['SoHo', 'TriBeCa', 'Village', 'Chelsea', 'Bowery', 'NoHo', 'Turtle Bay',
+	'Bushwick', 'Dumbo', 'Red Hook', 'Williamsburg', 'Park Slope', 'Coney Island']
+
+Brand.all.each do |brand|
+	if brand.locations.empty?
+		neighborhoods.sample(rand(3..(neighborhoods.length-3))).each do |neighborhood_name|
+			brand.locations.where(name: neighborhood_name).first_or_create
+		end
+	end
+end

@@ -4,6 +4,8 @@ Brand (:name)
 	has_many :price_levels
 	has_many :order_types
 
+	r g scaffold brand name:string
+
 Location (:name, :address)
 	belongs_to :brand
 	has_many :day_parts
