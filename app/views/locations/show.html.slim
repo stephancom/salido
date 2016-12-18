@@ -1,3 +1,24 @@
 h1= @location.full_name
 
+h3 Menu
+
+/ ul= render @location.brand.menu_items
+
+
+
+ul.nav.nav-tabs
+	- @location.brand.order_types.each do |order_type|
+		li.nav-item
+			= link_to order_type.name, "##{order_type.name.parameterize}", data: {toggle: :tab}, role: :tab, class: 'nav-link'
+.tab-content
+	- @location.brand.order_types.each do |order_type|
+		.tab-pane.fade id=order_type.name.parameterize role='tabpanel'
+			table.table.table-inverse.table-hover
+				tbody
+					- @location.menu_items.each do |menu_item|
+						tr
+							td= menu_item.name
+							td.right $0.00
+
+
 = link_to "back to #{@location.brand_name}", @location.brand

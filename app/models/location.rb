@@ -4,6 +4,7 @@ class Location < ApplicationRecord
   validates :name, uniqueness: {scope: :brand}, presence: true
 
   delegate :name, to: :brand, prefix: true
+  delegate :menu_items, to: :brand
 
   def full_name
   	"#{brand_name} - #{name}"
