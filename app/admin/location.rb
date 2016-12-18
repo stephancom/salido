@@ -1,7 +1,18 @@
 ActiveAdmin.register Location do
-	belongs_to :brand, optional: true
-	# navigation_menu :brand
+	belongs_to :brand
+	navigation_menu :brand
 	permit_params :name
+	remove_filter :brand
+	remove_filter :day_parts
+
+  index do
+    selectable_column
+    column :name
+    column :day_parts do |location|
+    	link_to location.day_parts.count, admin_location_day_parts_path(location)
+    end
+    actions
+  end
 
   action_item :day_parts, only: [:show, :edit] do
     link_to 'Day Parts', admin_location_day_parts_path(location)

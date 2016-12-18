@@ -2,6 +2,13 @@ ActiveAdmin.register PriceLevel do
 	belongs_to :brand
 	navigation_menu :brand
 	permit_params :name
+	remove_filter :brand
+
+  index do
+    selectable_column
+    column :name
+    actions
+  end
 
 	form do |f|
 		f.semantic_errors

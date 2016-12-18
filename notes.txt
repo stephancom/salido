@@ -85,3 +85,7 @@ TODO
 
 slug routes
 clean up admin (remove brand filter, remove id columns, etc)
+
+KNOWN ISSUES
+
+activeadmin breadcrumbs for day part

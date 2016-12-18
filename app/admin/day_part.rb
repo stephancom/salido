@@ -2,6 +2,13 @@ ActiveAdmin.register DayPart do
 	belongs_to :location
 	navigation_menu :location 
 	permit_params :name
+	remove_filter :location
+
+  index do
+    selectable_column
+    column :name
+    actions
+  end
 
 	form do |f|
 		f.semantic_errors
