@@ -26,4 +26,17 @@ ActiveAdmin.register Brand do
     end
 		h4 link_to 'Add Menu Item', new_admin_brand_menu_item_path(brand)
   end
+
+  action_item :price_levels, only: [:show, :edit] do
+    link_to 'Price Levels', admin_brand_price_levels_path(brand)
+  end
+
+  sidebar "Price Levels", only: [:show, :edit] do
+    ul do
+      brand.price_levels.each do |p|
+        li link_to p.name, admin_brand_price_level_path(brand, p)
+      end
+    end
+    h4 link_to 'Add Price Level', new_admin_brand_price_level_path(brand)
+  end
 end

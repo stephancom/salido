@@ -28,6 +28,8 @@ MenuItem (:name)
 PriceLevel (:name)
 	belongs_to :brand
 
+	r g scaffold price_level name:string brand:references:index
+
 Price (:amount)
 	belongs_to :menu_item
 	belongs_to :price_level

@@ -32,6 +32,8 @@ def fake_item
 	item
 end
 
+optional_price_levels = ['Happy Hour', 'Early Bird', 'Late Night', "Holiday", "Rush"]
+
 Brand.all.each do |brand|
 	if brand.locations.empty?
 		neighborhoods.sample(rand(3..(neighborhoods.length-3))).each do |neighborhood_name|
@@ -43,4 +45,10 @@ Brand.all.each do |brand|
 			brand.menu_items.where(name: fake_item).first_or_create
 		end
 	end
+	if brand.price_levels.empty?
+		optional_price_levels.sample(rand(0..(optional_price_levels.length))).each do |price_level_name|
+			brand.price_levels.where(name: price_level_name).first_or_create
+		end
+	end
+	brand.price_levels.where(name: 'Regular').first_or_create # always make Regular price
 end
