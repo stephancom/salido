@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161218220006) do
+ActiveRecord::Schema.define(version: 20161219004920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,22 +30,22 @@ ActiveRecord::Schema.define(version: 20161218220006) do
   end
 
   create_table "brands", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",       null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "day_parts", force: :cascade do |t|
     t.string   "name"
-    t.integer  "location_id"
+    t.integer  "location_id", null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.index ["location_id"], name: "index_day_parts_on_location_id", using: :btree
   end
 
   create_table "locations", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "brand_id"
+    t.string   "name",       null: false
+    t.integer  "brand_id",   null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["brand_id"], name: "index_locations_on_brand_id", using: :btree
@@ -53,7 +53,7 @@ ActiveRecord::Schema.define(version: 20161218220006) do
 
   create_table "menu_items", force: :cascade do |t|
     t.string   "name"
-    t.integer  "brand_id"
+    t.integer  "brand_id",   null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["brand_id"], name: "index_menu_items_on_brand_id", using: :btree
@@ -61,7 +61,7 @@ ActiveRecord::Schema.define(version: 20161218220006) do
 
   create_table "order_types", force: :cascade do |t|
     t.string   "name"
-    t.integer  "brand_id"
+    t.integer  "brand_id",   null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["brand_id"], name: "index_order_types_on_brand_id", using: :btree
@@ -69,10 +69,22 @@ ActiveRecord::Schema.define(version: 20161218220006) do
 
   create_table "price_levels", force: :cascade do |t|
     t.string   "name"
-    t.integer  "brand_id"
+    t.integer  "brand_id",   null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["brand_id"], name: "index_price_levels_on_brand_id", using: :btree
+  end
+
+  create_table "prices", force: :cascade do |t|
+    t.decimal  "amount",         precision: 5, scale: 2, default: "0.0", null: false
+    t.integer  "menu_item_id",                                           null: false
+    t.integer  "price_level_id",                                         null: false
+    t.datetime "created_at",                                             null: false
+    t.datetime "updated_at",                                             null: false
+    t.index ["menu_item_id", "price_level_id"], name: "index_prices_on_menu_item_id_and_price_level_id", unique: true, using: :btree
+    t.index ["menu_item_id"], name: "index_prices_on_menu_item_id", using: :btree
+    t.index ["price_level_id", "menu_item_id"], name: "index_prices_on_price_level_id_and_menu_item_id", unique: true, using: :btree
+    t.index ["price_level_id"], name: "index_prices_on_price_level_id", using: :btree
   end
 
   add_foreign_key "day_parts", "locations"
@@ -80,4 +92,6 @@ ActiveRecord::Schema.define(version: 20161218220006) do
   add_foreign_key "menu_items", "brands"
   add_foreign_key "order_types", "brands"
   add_foreign_key "price_levels", "brands"
+  add_foreign_key "prices", "menu_items"
+  add_foreign_key "prices", "price_levels"
 end

@@ -20,7 +20,12 @@ ul.nav.nav-tabs
 					- @location.menu_items.each do |menu_item|
 						tr
 							td= menu_item.name
-							td.right $0.00
+							td.text-xs-right
+								/ TODO: helper
+								- if menu_item.price == 0
+									' on the house
+								- else
+									= number_to_currency menu_item.price
 
 
 = link_to "back to #{@location.brand_name}", @location.brand

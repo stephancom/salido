@@ -65,10 +65,23 @@ Brand.all.each do |brand|
 	# which of course could be done, allowing for automatic generation of "hours of operation"
 	# and automatically selecting the right prices based on the time of day.
 	day_parts = %w(breakfast brunch elevenses lunch tea supper dinner)
-	Location.all.each do |location|
+	brand.locations.all.each do |location|
 		if location.day_parts.empty?
 			day_parts.sample(rand(1..(order_types.length))).each do |day_part_name|
 				location.day_parts.where(name: day_part_name).first_or_create
+			end
+		end
+	end
+
+	brand.menu_items.each do |menu_item|
+		if menu_item.prices.empty?
+			levels = brand.price_levels
+			default_price = rand(rand(menu_item.name.split(' ').count*10))+1
+
+			levels.sample(rand(1..levels.count)).each do |price_level|
+				menu_item.prices.where(price_level: price_level).first_or_create do |price|
+					price.amount = default_price * (1 + ([-1,1].sample * 0.05 * (rand(5))))
+				end
 			end
 		end
 	end

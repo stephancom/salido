@@ -54,12 +54,16 @@ DayPart (:name)
 
 	r g scaffold day_part name:string location:references:index
 
+CHECK
 * Each **Menu Item** may have a price assigned for each available **Price Level** (e.g. Regular: $4, Happy Hour: $2).
 MenuItem (:name)
 Price (:amount)
 	belongs_to :menu_item
 	belongs_to :price_level
 	validate menu_item.brand == price_level.brand
+	validate price_level unique for menu_item
+
+	r g model price amount:decimal{'5,2'} menu_item:references:index:null price_level:references:index:null
 
 * **Price Levels** are configured per **Location**. This is done by specifying an **Order Type** and optional **Day Part** for which it should be applied.
   * e.g. For the FiDi location:
