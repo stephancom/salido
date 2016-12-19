@@ -5,7 +5,7 @@ class Price < ApplicationRecord
   validates :amount, presence: true, numericality: {greater_than_or_equal_to: 0}
   validates :price_level_id, uniqueness: { scope: :menu_item_id }
   validates_each :price_level do |record, attr, value|
-  	record.errors.add(attr, 'must belong to same brand as menu item') unless value and value.brand_id == record.menu_item.brand_id
+  	record.errors.add(attr, 'must belong to same brand as menu item') unless value and value.brand_id == record.menu_item.brand_id # todo LOD
   end
 
   delegate :name, to: :menu_item, prefix: :true

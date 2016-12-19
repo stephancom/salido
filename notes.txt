@@ -70,12 +70,15 @@ Price (:amount)
     * The "Regular" price level is applied if the order type is "Dine In"
     * The "Happy Hour" price level is applied if the order type is "Dine In" and the day part is "Dinner"
     * The "Delivery" price level is applied if the order type is "Delivery"
-LocationPriceLevel
+LocalPricing (for lack of a better name)
+	belongs_to :location
 	belongs_to :price_level
 	belongs_to :order_type
 	belongs_to :day_part (optional) (nested_attribute ignores dupes?)
 	validates price_level/order_type all same brand
 	validates day_part.location == location
+
+	r g model local_pricing location:references:index::null price_level:references:index:null order_type:references:index:null day_part:references:index
 
 * The applicable **Price Level** for any given **Menu Item** is determined at the point of sale by assessing the **Price Level** configurations for the current **Location**:
   * If the **Menu Item** has a price specified for the **Price Level** that correlates with the current **Order Type** and **Day Part**, use that **Price Level**.

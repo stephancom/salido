@@ -1,6 +1,7 @@
 class PriceLevel < ApplicationRecord
   belongs_to :brand
   has_many :prices, dependent: :destroy
+  has_many :local_pricings, dependent: :destroy
 
   validates :name, uniqueness: {scope: :brand}, presence: true
 

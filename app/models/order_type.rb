@@ -1,5 +1,6 @@
 class OrderType < ApplicationRecord
   belongs_to :brand
+  has_many :local_pricings, dependent: :destroy
 
   validates :name, uniqueness: {scope: :brand}, presence: true
 

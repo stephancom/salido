@@ -85,6 +85,23 @@ Brand.all.each do |brand|
 			end
 		end
 	end
+
+	brand.locations.each do |location|
+		puts "location #{location.name}"
+		if location.local_pricings.empty?
+			puts "yes"
+			brand.order_types.sample(rand(1..brand.order_types.length)).each do |order_type|
+				puts order_type.full_name
+				([nil] + location.day_parts).sample(rand(1..location.day_parts.length)).each do |day_part|
+					puts day_part.full_name if day_part
+					location.local_pricings.where(location: location, order_type: order_type, day_part: day_part).first_or_create! do |local_pricing|
+						local_pricing.price_level = brand.price_levels.sample
+						puts local_pricing
+					end
+				end
+			end
+		end
+	end
 end
 
 

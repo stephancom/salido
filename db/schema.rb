@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161219004920) do
+ActiveRecord::Schema.define(version: 20161219034639) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,20 @@ ActiveRecord::Schema.define(version: 20161219004920) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.index ["location_id"], name: "index_day_parts_on_location_id", using: :btree
+  end
+
+  create_table "local_pricings", force: :cascade do |t|
+    t.integer  "location_id",    null: false
+    t.integer  "price_level_id", null: false
+    t.integer  "order_type_id",  null: false
+    t.integer  "day_part_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.index ["day_part_id"], name: "index_local_pricings_on_day_part_id", using: :btree
+    t.index ["location_id"], name: "index_local_pricings_on_location_id", using: :btree
+    t.index ["order_type_id"], name: "index_local_pricings_on_order_type_id", using: :btree
+    t.index ["price_level_id", "order_type_id", "day_part_id"], name: "local_pricing_index", unique: true, using: :btree
+    t.index ["price_level_id"], name: "index_local_pricings_on_price_level_id", using: :btree
   end
 
   create_table "locations", force: :cascade do |t|
@@ -88,6 +102,10 @@ ActiveRecord::Schema.define(version: 20161219004920) do
   end
 
   add_foreign_key "day_parts", "locations"
+  add_foreign_key "local_pricings", "day_parts"
+  add_foreign_key "local_pricings", "locations"
+  add_foreign_key "local_pricings", "order_types"
+  add_foreign_key "local_pricings", "price_levels"
   add_foreign_key "locations", "brands"
   add_foreign_key "menu_items", "brands"
   add_foreign_key "order_types", "brands"
