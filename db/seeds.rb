@@ -32,8 +32,8 @@ def fake_item
 	item
 end
 
-optional_price_levels = ['Happy Hour', 'Early Bird', 'Late Night', "Holiday", "Rush"]
-order_types = ["Dine In", "Carry Out", "Delivery", "Counter Service", "Catering"]
+optional_price_levels = ['Happy Hour', 'Early Bird', 'Late Night', 'Holiday', 'Rush']
+order_types = ['Dine In', 'Carry Out', 'Delivery', 'Counter Service', 'Catering']
 
 Brand.all.each do |brand|
 	if brand.locations.empty?
