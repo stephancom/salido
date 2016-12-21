@@ -7,9 +7,9 @@ private
 
 	def day_part
 		@day_part = if params.key?(:day_part)
-			resource.day_parts.where(id: params[:day_part]).first
+			resource.available_day_parts.where(id: params[:day_part]).first
 		else
-			resource.day_parts.first
+			resource.available_day_parts.first
 		end
 	end
 end

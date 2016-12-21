@@ -1,7 +1,7 @@
 h1= @location.full_name
 
 ul.nav.nav-pills.float-xs-right
-	- @location.day_parts.each do |day_part|
+	- @location.available_day_parts.each do |day_part|
 		li.nav-item= link_to day_part.name, brand_location_path(@location.brand, @location, day_part: day_part), class: ['nav-link', ('active' if day_part == @day_part)]
 h3 
 	= @day_part.try(:name) || 'anytime'

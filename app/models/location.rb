@@ -13,15 +13,10 @@ class Location < ApplicationRecord
   	"#{brand_name} - #{name}"
   end
 
-  # menu items can only be priced at a location for a given order type 
-  # if there is a corresponding local pricing with that order type and
-  # either the given day part or nil
-  def day_parts_for_order_type(order_type)
-  	if local_pricings.where(order_type: order_type).any?
-  		day_parts
-  	else
-  		day_parts.joins(local_pricings: { order_type: order_type }).distinct
-  	end
+  # day parts are only available at a location if there is 
+  # at least one local pricing for that day part
+  def available_day_parts
+  		day_parts.joins(:local_pricings).where('local_pricings.id IS NOT NULL').distinct
   end
 
   # returns order types that are configured for given day part
