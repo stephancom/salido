@@ -13,7 +13,22 @@ class MenuItem < ApplicationRecord
   	"#{brand_name} - #{name}"
   end
 
-  def price
-  	prices.first.try(:amount) # temporary
+  def available_at_location_for_order_type_and_day_part?(location, order_type, day_part)
+    !price_at_location_for_order_type_and_day_part(location, order_type, day_part).nil?
+  end
+
+  def price_at_location_for_order_type_and_day_part(location, order_type, day_part)
+    price =  prices.joins(price_level: { local_pricings: [:day_part, :location] }).
+                    where(price_level: { local_pricings: { order_type_id: order_type.id, 
+                                                           day_part_id: day_part.id, 
+                                                           location_id: location.id } })
+
+    if price.empty?
+      price =  prices.joins(price_level: { local_pricings: [:day_part, :location] }).
+                      where(price_level: { local_pricings: { order_type_id: order_type.id,
+                                                             location_id: location.id } })
+    end
+
+    price.first
   end
 end

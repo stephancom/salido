@@ -1,7 +1,7 @@
 ActiveAdmin.register LocalPricing do
 	belongs_to :location
 	navigation_menu :location 
-	permit_params :name
+	permit_params :location_id, :order_type_id, :price_level_id, :day_part_id
 	remove_filter :location, :order_type, :price_level, :day_part
 
 	index	do

@@ -2,7 +2,7 @@ class LocalPricing < ApplicationRecord
 	belongs_to :location
   belongs_to :order_type
   belongs_to :price_level
-  belongs_to :day_part
+  belongs_to :day_part # optional
   delegate :brand, to: :location
 
   validates :location, presence: true
@@ -12,9 +12,6 @@ class LocalPricing < ApplicationRecord
   validates_each :price_level, :order_type, :day_part do |record, attr, value|
   	record.errors.add(attr, 'must belong to same brand as day part/location') if value and value.brand_id != record.brand.id
   end
-  # validates_each :day_part do |record, attr, value|
-  # 	record.errors.add(attr, 'must belong to same brand as day part/location') if value and value.brand_id != record.brand.id
-  # end
 
   delegate :brand, to: :location
   delegate :full_name, to: :location, prefix: true

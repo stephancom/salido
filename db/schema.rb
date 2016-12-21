@@ -67,9 +67,10 @@ ActiveRecord::Schema.define(version: 20161219034639) do
 
   create_table "menu_items", force: :cascade do |t|
     t.string   "name"
-    t.integer  "brand_id",   null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "brand_id",                                              null: false
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
+    t.decimal  "default_price", precision: 5, scale: 2, default: "0.0", null: false
     t.index ["brand_id"], name: "index_menu_items_on_brand_id", using: :btree
   end
 

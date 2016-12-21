@@ -1,31 +1,29 @@
 h1= @location.full_name
 
+ul.nav.nav-pills.float-xs-right
+	- @location.day_parts.each do |day_part|
+		li.nav-item= link_to day_part.name, brand_location_path(@location.brand, @location, day_part: day_part), class: ['nav-link', ('active' if day_part == @day_part)]
 h3 
-	' Menu
-	.btn-group.float-xs-right data-toggle=:buttons
-		- @location.day_parts.each do |day_part|
-			label.btn.btn-outline-primary
-				input type=:radio name=:day_part id=day_part autocomplete=:off = day_part.name
-
+	= @day_part.try(:name) || 'anytime'
+	'  menu
 
 ul.nav.nav-tabs
+	- first = true
 	- @location.brand.order_types.each do |order_type|
 		li.nav-item
-			= link_to order_type.name, "##{order_type.name.parameterize}", data: {toggle: :tab}, role: :tab, class: 'nav-link'
+			= link_to order_type.name, "##{order_type.name.parameterize}", data: {toggle: :tab}, role: :tab, class: ['nav-link', ('active' if first)]
+			- first = false # why yes, this is kind of sleazy.
 .tab-content
+	- first = true
 	- @location.brand.order_types.each do |order_type|
-		.tab-pane.fade id=order_type.name.parameterize role='tabpanel'
+		.tab-pane.fade id=order_type.name.parameterize role='tabpanel' class=('active in' if first)
 			table.table.table-inverse.table-hover
 				tbody
 					- @location.menu_items.each do |menu_item|
-						tr
-							td= menu_item.name
-							td.text-xs-right
-								/ TODO: helper
-								- if menu_item.price == 0
-									' on the house
-								- else
-									= number_to_currency menu_item.price
-
+						- if menu_item.available_at_location_for_order_type_and_day_part?(@location, order_type, @day_part)
+							tr
+								td= menu_item.name
+								td.text-xs-right= number_to_currency menu_item.price_at_location_for_order_type_and_day_part(@location, order_type, @day_part).amount
+		- first = false # more sleaze
 
 = link_to "back to #{@location.brand_name}", @location.brand
