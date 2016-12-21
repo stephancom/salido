@@ -18,13 +18,14 @@ class MenuItem < ApplicationRecord
   end
 
   def price_at_location_for_order_type_and_day_part(location, order_type, day_part)
-    price =  prices.joins(price_level: { local_pricings: [:day_part, :location] }).
+    price =  prices.joins(price_level: :local_pricings).
                     where(price_level: { local_pricings: { order_type_id: order_type.id, 
                                                            day_part_id: day_part.id, 
                                                            location_id: location.id } })
 
     if price.empty?
-      price =  prices.joins(price_level: { local_pricings: [:day_part, :location] }).
+      # 1/0
+      price =  prices.joins(price_level: :local_pricings).
                       where(price_level: { local_pricings: { order_type_id: order_type.id,
                                                              location_id: location.id } })
     end

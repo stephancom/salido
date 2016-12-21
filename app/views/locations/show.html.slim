@@ -7,23 +7,35 @@ h3
 	= @day_part.try(:name) || 'anytime'
 	'  menu
 
+- @order_types = @location.order_types_for_day_part(@day_part) # TODO move into controller
+/ TODO move menu find into controller/model
 ul.nav.nav-tabs
 	- first = true
-	- @location.brand.order_types.each do |order_type|
+	- @order_types.each do |order_type|
 		li.nav-item
 			= link_to order_type.name, "##{order_type.name.parameterize}", data: {toggle: :tab}, role: :tab, class: ['nav-link', ('active' if first)]
 			- first = false # why yes, this is kind of sleazy.
 .tab-content
 	- first = true
-	- @location.brand.order_types.each do |order_type|
+	- @order_types.each do |order_type|
 		.tab-pane.fade id=order_type.name.parameterize role='tabpanel' class=('active in' if first)
 			table.table.table-inverse.table-hover
+				/ thead
+				/ 	tr
+				/ 		th
+				/ 			' price level
+				/ 			= @location.price_level_for_order_type_and_day_part(order_type, @day_part).full_name rescue 'none'
+				/ 		th
 				tbody
 					- @location.menu_items.each do |menu_item|
-						- if menu_item.available_at_location_for_order_type_and_day_part?(@location, order_type, @day_part)
+						- if menu_item.available_at_location_for_order_type_and_day_part?(@location, order_type, @day_part) # or true
 							tr
-								td= menu_item.name
-								td.text-xs-right= number_to_currency menu_item.price_at_location_for_order_type_and_day_part(@location, order_type, @day_part).amount
+								td
+									= menu_item.name
+									/ '  :: debug prices 
+									/ = menu_item.prices.map { |p| "#{p.price_level.full_name} - #{number_to_currency p.amount}" }.to_sentence
+								td.text-xs-right= number_to_currency menu_item.price_at_location_for_order_type_and_day_part(@location, order_type, @day_part).amount rescue '-'
+								/ td = menu_item.available_at_location_for_order_type_and_day_part?(@location, order_type, @day_part)
 		- first = false # more sleaze
 
 = link_to "back to #{@location.brand_name}", @location.brand
