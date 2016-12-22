@@ -38,6 +38,8 @@ class Location < ApplicationRecord
 		pls.first
   end
 
+  # TODO - NOT IMPLEMENTED
+  # this would/could probably be much more efficient that the present per-item fetch
   def menu_for_order_type_and_day_part(order_type, day_part)
   	# TODO
   	# sketch
