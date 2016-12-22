@@ -1,16 +1,12 @@
 class LocationsController < InheritedResources::Base
 	belongs_to :brand
 
-	before_filter :day_part
-
-private
-
-	def day_part
-		@day_part = if params.key?(:day_part)
-			resource.available_day_parts.where(id: params[:day_part]).first
-		else
-			resource.available_day_parts.first
-		end
+	def show
+		@brand = resource.brand
+		@day_parts = resource.available_day_parts
+		@day_part = params.key?(:day_part) ? @day_parts.where(id: params[:day_part]).first : @day_parts.first
+		@order_types = resource.order_types_for_day_part(@day_part)
+		@menu_items = resource.menu_items
 	end
 end
 
