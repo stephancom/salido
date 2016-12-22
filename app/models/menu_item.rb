@@ -28,17 +28,8 @@ class MenuItem < ApplicationRecord
 
   # find price for item at given location/order_type/day part
   def price_at_location_for_order_type_and_day_part(location, order_type, day_part)
-    price =  prices.joins(price_level: :local_pricings).
-                    where(price_level: { local_pricings: { order_type_id: order_type.id, 
-                                                           day_part_id: day_part.id, 
-                                                           location_id: location.id } })
-
-    if price.empty?
-      price =  prices.joins(price_level: :local_pricings).
-                      where(price_level: { local_pricings: { order_type_id: order_type.id,
-                                                             location_id: location.id } })
-    end
-
-    price.first
+    possible_prices = prices.for_location_and_order_type_and_day_part(location, order_type, day_part)
+    possible_prices = prices.for_location_and_order_type(location, order_type) if possible_prices.empty?
+    possible_prices.first
   end
 end

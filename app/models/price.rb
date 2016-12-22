@@ -10,4 +10,11 @@ class Price < ApplicationRecord
 
   delegate :name, to: :menu_item, prefix: :true
   delegate :name, to: :price_level, prefix: :true
+
+  scope :for_location_and_order_type, -> (location, order_type) { joins(price_level: :local_pricings).
+			    where(price_level: { local_pricings: { order_type_id: order_type.id, location_id: location.id } }) 
+	}
+  scope :for_location_and_order_type_and_day_part, -> (location, order_type, day_part) {
+  				for_location_and_order_type(location, order_type).where(price_level: { local_pricings: { day_part_id: day_part.id } })
+  }
 end
